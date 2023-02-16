@@ -1,0 +1,40 @@
+input[type="number"]
+{
+    -webkit-appearance: textfield !important;
+    margin: 0;
+    -moz-appearance:textfield !important;
+    appearance: none;
+}
+
+.formInmueble{
+    padding: 20px;
+    border-radius: 15px;
+    border: darkslategray 2px solid;
+    width: 100%;
+    height: 95vh;
+}
+
+.resultForm{
+    padding: 20px;
+    border-radius: 15px;
+    border: darkslategray 2px solid;
+    width: 100%;
+    height: 95vh;
+}
+
+.resultQuery{
+    margin-top: 20px;
+}
+
+span{
+    color: red;
+    font-size: 14px;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+.resultados{
+    font-size: 16px;
+}
