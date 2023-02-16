@@ -38,3 +38,16 @@ html{
 .resultados{
     font-size: 16px;
 }
+
+table,tr,td,th{
+    border: darkslategray 2px solid;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+
+table{
+    width: 100%;
+    border-radius: 10px;
+}

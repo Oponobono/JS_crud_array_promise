@@ -71,6 +71,8 @@ let inmueble = [
   }
 ];
 
+
+
 let cbInmueble = document.getElementById("cbInmueble");
 cbInmueble.addEventListener('change', function() {
   var estado = document.getElementById("estado");
@@ -92,71 +94,75 @@ btnEnviar.addEventListener("click", function() {
   let precio = document.getElementById("precio").value;
   let estado = document.getElementById("estado").value;
 
-  if(!idinmueble){
-    document.getElementById("messIdInmueble").innerHTML = "Se debe ingresar un numero de ID";
-  }else{
-    document.getElementById("messIdInmueble").innerHTML ="";
-  }
 
-  if(!direccion){
-    document.getElementById("messDireccion").innerHTML = "Se debe ingresar una dirección";
-  }else{
-    document.getElementById("messDireccion").innerHTML= "";
-  }
-
-  if(!telefono){
-    document.getElementById("messTel").innerHTML = "Se debe ingresar un telefono";
-  }else{
-    document.getElementById("messTel").innerHTML = "";
-  }
-
-  if(!precio){
-    document.getElementById("messPrecio").innerHTML = "Se debe ingrear un precio entre 200 millones y 300 millones";
-  }else{
-    document.getElementById("messPrecio").innerHTML = "";
-  }
-
-  if(idinmueble && direccion && telefono && precio && estado) {
-
-    if(estado == "Seleccione dando click:" || estado == "No disponible"){
-      document.getElementById("resultados").innerHTML = "El estado del inmueble debe ser disponible";
+  if(!idinmueble || !direccion || !telefono || !direccion || !estado){
+    if(!idinmueble){
+      document.getElementById("messIdInmueble").innerHTML = "Se debe ingresar un numero de ID";
     }else{
+      document.getElementById("messIdInmueble").innerHTML ="";
+    }
 
-      let inmuebleEncontrado = inmueble.find(function(elem) {
-        return elem.idinmueble === idinmueble && elem.estado === "disponible";
-      });
+    if(!direccion){
+      document.getElementById("messDireccion").innerHTML = "Se debe ingresar una dirección";
+    }else{
+      document.getElementById("messDireccion").innerHTML= "";
+    }
 
-      if(inmuebleEncontrado){
-        document.getElementById("resultados").innerHTML = "Ya existe un inmueble con el ID ingresado, por favor especifique un ID diferente.";
+    if(!telefono){
+      document.getElementById("messTel").innerHTML = "Se debe ingresar un telefono";
+    }else{
+      document.getElementById("messTel").innerHTML = "";
+    }
+
+    if(!precio){
+      document.getElementById("messPrecio").innerHTML = "Se debe ingrear un precio entre 200 millones y 300 millones";
+    }else{
+      document.getElementById("messPrecio").innerHTML = "";
+    }
+  }else{
+    if(idinmueble && direccion && telefono && precio && estado) {
+
+      if(estado === "Seleccione dando click:" || estado === "No Disponible"){
+        document.getElementById("resultados").innerHTML = "Para poder guardar un nuevo registro el estado del inmueble debe ser disponible";
+        document.getElementById("messEstado").innerHTML = "La seleccion debe ser disponible";
       }else{
-        if (precio >= 100000000 && precio <= 500000000) {
-          let promesa = new Promise(function(resolve, reject) {
-            setTimeout(function() {
-              let nuevoInmueble = {
-                idinmueble: idinmueble,
-                direccion: direccion,
-                telefono: telefono,
-                precio: precio,
-                estado: estado
-              };
-              inmueble.push(nuevoInmueble);
-              resolve("El inmueble ha sido agregado correctamente.");
-            }, 2000);
-          });
 
-          promesa.then(function(mensaje) {
-            document.getElementById("resultados").innerHTML = mensaje;
-          }).catch(function(error) {
-            document.getElementById("resultados").innerHTML = error;
-          });
-        } else {
-          document.getElementById("resultados").innerHTML = "El precio debe estar entre 100 millones y 500 millones.";
+        let inmuebleEncontrado = inmueble.find(function(elem) {
+          return elem.idinmueble === idinmueble;
+        });
+
+        if(inmuebleEncontrado){
+          document.getElementById("resultados").innerHTML = "Ya existe un inmueble con el ID ingresado, por favor especifique un ID diferente.";
+        }else{
+          if (precio >= 100000000 && precio <= 500000000) {
+            let promesa = new Promise(function(resolve, reject) {
+              setTimeout(function() {
+                let nuevoInmueble = {
+                  idinmueble: idinmueble,
+                  direccion: direccion,
+                  telefono: telefono,
+                  precio: precio,
+                  estado: estado
+                };
+                inmueble.push(nuevoInmueble);
+                resolve("El inmueble ha sido agregado correctamente.");
+              }, 2000);
+            });
+
+            promesa.then(function(mensaje) {
+              document.getElementById("resultados").innerHTML = mensaje;
+            }).catch(function(error) {
+              document.getElementById("resultados").innerHTML = error;
+            });
+          } else {
+            document.getElementById("resultados").innerHTML = "Para poder guardar un registro nuevo, el precio debe estar entre 100 millones y 500 millones.";
+          }
         }
       }
     }
   }
 });
-
+/*
 let btnActualizar = document.getElementById("btnActualizar");
 btnActualizar.addEventListener("click", function() {
   let idinmueble = document.getElementById("idinmueble").value;
@@ -184,6 +190,42 @@ btnActualizar.addEventListener("click", function() {
     }
   }
 });
+*/
+
+let btnActualizar = document.getElementById("btnActualizar");
+btnActualizar.addEventListener("click", function() {
+  let idinmueble = document.getElementById("idinmueble").value;
+  let direccion = document.getElementById("direccion").value;
+  let telefono = document.getElementById("telefono").value;
+  let precio = document.getElementById("precio").value;
+  let estado = document.getElementById("estado").value;
+
+  let inmuebleEncontrado = inmueble.find(function(elem) {
+    return elem.idinmueble === idinmueble && elem.estado === "No disponible";
+  });
+
+  if(inmuebleEncontrado){
+    document.getElementById("resultados").innerHTML = "No es posible actualizar el registro ya que no se encuentra disponible.";
+  }else{
+    let inmuebleIndex = inmueble.findIndex(function(elem) {
+      return elem.idinmueble === idinmueble;
+    });
+    if (inmuebleIndex >= 0) {
+      if (precio >= 100000000 && precio <= 500000000) {
+        inmueble[inmuebleIndex].direccion = direccion;
+        inmueble[inmuebleIndex].telefono = telefono;
+        inmueble[inmuebleIndex].precio = precio;
+        inmueble[inmuebleIndex].estado = estado;
+        document.getElementById("resultados").innerHTML = "El inmueble ha sido actualizado correctamente.";
+      } else {
+        document.getElementById("resultados").innerHTML = "El precio debe estar entre 100 millones y 500 millones.";
+      }
+    } else {
+      document.getElementById("resultados").innerHTML = "No se encontró ningún inmueble con ese ID.";
+    }
+  }
+});
+
 
 let btnBuscar = document.getElementById("btnBuscar");
 btnBuscar.addEventListener("click", function() {
@@ -192,23 +234,29 @@ btnBuscar.addEventListener("click", function() {
     return elem.idinmueble === idinmueble;
   });
 
-  if (inmuebleEncontrado) {
-    document.getElementById("direccion").value = inmuebleEncontrado.direccion;
-    document.getElementById("telefono").value = inmuebleEncontrado.telefono;
-    document.getElementById("precio").value = inmuebleEncontrado.precio;
-    document.getElementById("estado").value = inmuebleEncontrado.estado;
-    if(estado == "Disponible"){
-      document.getElementById("resultados").innerHTML = "";
-      document.getElementById("cbInmueble").checked = true;
-    }else{
-      document.getElementById("resultados").innerHTML = "El inmueble no esta disponible";
-      document.getElementById("cbInmueble").checked = false;
+  if(!idinmueble){
+    document.getElementById("resultados").innerHTML = "Primero debe ingresar el ID del inmueble";
+    document.getElementById("messIdInmueble").innerHTML = "Se debe ingresar un numero de ID";
+  }else{
+    if (inmuebleEncontrado) {
+      document.getElementById("direccion").value = inmuebleEncontrado.direccion;
+      document.getElementById("telefono").value = inmuebleEncontrado.telefono;
+      document.getElementById("precio").value = inmuebleEncontrado.precio;
+      document.getElementById("estado").value = inmuebleEncontrado.estado;
+      if(inmuebleEncontrado.estado === "Disponible"){
+        document.getElementById("resultados").innerHTML = "";
+        document.getElementById("cbInmueble").checked = true;
+      }else{
+        document.getElementById("resultados").innerHTML = "El inmueble no esta disponible";
+        document.getElementById("cbInmueble").checked = false;
+      }
+    } else {
+      document.getElementById("resultados").innerHTML = "El inmueble no existe.";
     }
-  } else {
-    document.getElementById("resultados").innerHTML = "El inmueble no existe.";
   }
 });
 
+/*
 let btnListar = document.getElementById("btnListar");
 btnListar.addEventListener("click", function() {
   let inmueblesDisponibles = inmueble.filter(function(elem) {
@@ -223,6 +271,23 @@ btnListar.addEventListener("click", function() {
 
   document.getElementById("resultados").innerHTML = lista;
 });
+*/
+
+let btnListar = document.getElementById("btnListar");
+btnListar.addEventListener("click", function() {
+  let inmueblesDisponibles = inmueble.filter(function(elem) {
+    return elem.estado === "Disponible" && elem.precio >= 200000000 && elem.precio <= 300000000;
+  });
+
+  let tabla = "<table><thead><tr><th>Id Inmueble</th><th>Dirección</th><th>Teléfono</th><th>Precio</th><th>Estado</th></tr></thead><tbody>";
+  inmueblesDisponibles.forEach(function(elem) {
+    tabla += "<tr><td>" + elem.idinmueble + "</td><td>" + elem.direccion + "</td><td>" + elem.telefono + "</td><td>" + elem.precio + "</td><td>" + elem.estado + "</td></tr>";
+  });
+  tabla += "</tbody></table>";
+
+  document.getElementById("resultados").innerHTML = tabla;
+});
+
 
 let btnLimpiar = document.getElementById("btnLimpiar");
 btnLimpiar.addEventListener("click", function() {
@@ -230,7 +295,7 @@ btnLimpiar.addEventListener("click", function() {
     document.getElementById("direccion").value = "";
     document.getElementById("telefono").value = "";
     document.getElementById("precio").value = "";
-    document.getElementById("estado").value = "Seleccione:";
+    document.getElementById("estado").value = "Seleccione dando click:";
     document.getElementById("resultados").innerHTML = "";
     document.getElementById("messIdInmueble").innerHTML = "";
     document.getElementById("messDireccion").innerHTML = "";
